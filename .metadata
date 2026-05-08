@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "command": "flutter",
+  "submittedURL": "dart-code://settings",
+  "diagnosticsURL": "dart-code://diagnostics",
+  "instructions": "",
+  "timestamp": "2024-05-08T00:00:00Z",
+  "runtimeType": "Dart SDK",
+  "flutterSdkVersion": "3.11.5",
+  "dartSdkVersion": "3.11.5",
+  "platformGathererVersion": null,
+  "osVersion": "Windows",
+  "machineHardwareDescription": "x86_64",
+  "userScriptExcludedPackages": [],
+  "userScriptIncludedPackages": [],
+  "plugins": [
+    {
+      "name": "flutter.io/flutter_build",
+      "enabled": true
+    }
+  ],
+  "problems": []
+}

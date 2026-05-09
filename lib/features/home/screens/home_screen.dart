@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/fridge_service.dart';
 import '../../../models/fridge_item_model.dart';
+import '../../auth/screens/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -379,7 +380,11 @@ class ProfileView extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               context.read<AuthService>().logout();
-              Navigator.of(context).pushReplacementNamed('/login');
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,

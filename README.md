@@ -43,11 +43,20 @@ flutter pub run build_runner build
 - Create `.env` file with API base URL and Firebase configuration
 - Update `lib/config/app_config.dart` with your settings
 
+If you're running the Flutter app on an Android emulator, the app will default to `http://10.0.2.2` so it can reach a local XAMPP API running on your host machine. For iOS simulators, desktop targets, or physical devices, set `API_BASE_URL` explicitly with `--dart-define`.
+
+See [docs/xampp-api-example.md](docs/xampp-api-example.md) for a ready-to-use PHP and MySQL example in XAMPP.
+
 ### Running the App
 
 **Development:**
 ```bash
 flutter run -d <device-id>
+```
+
+**Android emulator with local API:**
+```bash
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2
 ```
 
 **Debug Build:**

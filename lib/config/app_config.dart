@@ -1,9 +1,32 @@
+import 'package:flutter/foundation.dart';
+
 class AppConfig {
   // API Configuration
-  static const String apiBaseUrl = String.fromEnvironment(
+  static const String _apiBaseUrlOverride = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:3000',
+    defaultValue: '',
   );
+
+  static String get apiBaseUrl {
+    if (_apiBaseUrlOverride.isNotEmpty) {
+      return _apiBaseUrlOverride;
+    }
+
+    if (kIsWeb) {
+      return 'http://localhost:3000';
+    }
+
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return 'http://10.0.2.2';
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        return 'http://localhost:3000';
+    }
+  }
   
   static const int apiTimeout = 30; // seconds
   
@@ -63,7 +86,9 @@ class AppConfig {
   
   // Environment-specific configurations
   static bool get isDevelopment =>
-      apiBaseUrl.contains('localhost') || apiBaseUrl.contains('192.168');
+      apiBaseUrl.contains('localhost') ||
+      apiBaseUrl.contains('192.168') ||
+      apiBaseUrl.contains('10.0.2.2');
   
   static bool get isProduction =>
       apiBaseUrl.contains('api.sehatmok.com');

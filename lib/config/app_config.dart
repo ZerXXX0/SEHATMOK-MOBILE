@@ -12,20 +12,15 @@ class AppConfig {
       return _apiBaseUrlOverride;
     }
 
-    if (kIsWeb) {
-      return 'http://localhost:3000';
-    }
-
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return 'http://10.0.2.2';
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-      case TargetPlatform.windows:
-      case TargetPlatform.linux:
-      case TargetPlatform.fuchsia:
-        return 'http://localhost:3000';
-    }
+    // --- LOCAL DEVELOPMENT BACKEND ---
+    // The production server (sehatmok.my.id) is protected by Imunify360 WAF bot-protection,
+    // which blocks automated mobile client requests. For development, we route traffic 
+    // to the local Next.js dev server running on your machine:
+    // return 'http://192.168.100.147:3000'; // Local IP (SM A556E / physical devices)
+    // return 'http://10.0.2.2:3000';    // Android Emulator
+    // return 'http://localhost:3000';   // iOS Simulator / Web
+    
+    return 'https://sehatmok.my.id';  // Production
   }
   
   static const int apiTimeout = 30; // seconds
@@ -88,9 +83,11 @@ class AppConfig {
   static bool get isDevelopment =>
       apiBaseUrl.contains('localhost') ||
       apiBaseUrl.contains('192.168') ||
-      apiBaseUrl.contains('10.0.2.2');
+      apiBaseUrl.contains('10.0.2.2') ||
+      apiBaseUrl.contains('127.0.0.1');
   
   static bool get isProduction =>
+      apiBaseUrl.contains('sehatmok.my.id') ||
       apiBaseUrl.contains('api.sehatmok.com');
   
   static bool get isStaging =>

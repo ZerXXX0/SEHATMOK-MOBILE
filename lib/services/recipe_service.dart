@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+
+import '../models/ai_recipe_model.dart';
 import '../models/recipe_model.dart';
+import '../models/recommendation_model.dart';
 import 'api_service.dart';
 import 'database_service.dart';
 
@@ -11,8 +15,8 @@ class RecipeService {
 
   // Get all recipes
   Future<List<Recipe>> getRecipes({
-    int page = 1,
-    int limit = 25,
+    String? query,
+    String? category,
   }) async {
     try {
       _logger.d('Fetching recipes');
@@ -20,12 +24,13 @@ class RecipeService {
       final response = await _apiService.get(
         '/api/recipes',
         queryParameters: {
-          'page': page,
-          'limit': limit,
+          if (query != null && query.trim().isNotEmpty) 'q': query.trim(),
+          if (category != null && category.trim().isNotEmpty)
+            'category': category.trim(),
         },
       );
 
-      final recipes = (response['recipes'] as List)
+      final recipes = (response as List)
           .map((recipe) => Recipe.fromJson(recipe))
           .toList();
 
@@ -69,11 +74,10 @@ class RecipeService {
     }
   }
 
-  // Get recommendations
-  Future<List<Recipe>> getRecommendations({
+  // Get recommendations based on selected fridge items
+  Future<RecommendationResponse> getRecommendations({
     required List<String> selectedFridgeItemIds,
     String? dietaryPreferences,
-    int limit = 6,
   }) async {
     try {
       _logger.d('Fetching recipe recommendations');
@@ -82,73 +86,100 @@ class RecipeService {
         '/api/recommendations',
         data: {
           'selectedFridgeItemIds': selectedFridgeItemIds,
-          if (dietaryPreferences != null)
-            'dietaryPreferences': dietaryPreferences,
-          'limit': limit,
+          if (dietaryPreferences != null && dietaryPreferences.trim().isNotEmpty)
+            'dietaryPreferences': dietaryPreferences.trim(),
         },
       );
 
-      final recipes = (response['recommendations'] as List)
-          .map((recipe) => Recipe.fromJson(recipe))
-          .toList();
-
-      _logger.d('Fetched ${recipes.length} recommendations');
-      return recipes;
+      final result = RecommendationResponse.fromJson(response);
+      _logger.d('Fetched ${result.recommendations.length} recommendations');
+      return result;
     } catch (e) {
       _logger.e('Error fetching recommendations: $e');
       rethrow;
     }
   }
 
-  // Generate recipe with AI
-  Future<Recipe> generateRecipeWithAI({
-    required List<String> ingredients,
+  // Get recommendations using all fridge items
+  Future<RecommendationResponse> getFridgeRecommendations() async {
+    try {
+      _logger.d('Fetching fridge recommendations');
+
+      final response = await _apiService.get('/api/recommendations');
+      return RecommendationResponse.fromJson(response);
+    } catch (e) {
+      _logger.e('Error fetching fridge recommendations: $e');
+      rethrow;
+    }
+  }
+
+  // Generate recipes with AI
+  Future<AiRecipeCandidatesResponse> generateRecipesWithAI({
+    required List<String> selectedFridgeItemIds,
     String? dietaryPreferences,
-    int? targetCalories,
-    int? cookingTimeMinutes,
   }) async {
     try {
-      _logger.d('Generating recipe with AI');
+      _logger.d('Generating recipes with AI');
 
       final response = await _apiService.post(
-        '/api/ai/generate-recipe',
+        '/api/ai/generate-recipes',
         data: {
-          'ingredients': ingredients,
-          if (dietaryPreferences != null)
-            'dietaryPreferences': dietaryPreferences,
-          if (targetCalories != null) 'targetCalories': targetCalories,
-          if (cookingTimeMinutes != null)
-            'cookingTimeMinutes': cookingTimeMinutes,
+          'selectedFridgeItemIds': selectedFridgeItemIds,
+          if (dietaryPreferences != null && dietaryPreferences.trim().isNotEmpty)
+            'dietaryPreferences': dietaryPreferences.trim(),
+        },
+        options: Options(
+          receiveTimeout: const Duration(minutes: 2),
+        ),
+      );
+
+      return AiRecipeCandidatesResponse.fromJson(response);
+    } catch (e) {
+      _logger.e('Error generating recipes with AI: $e');
+      rethrow;
+    }
+  }
+
+  // Save AI recipe to recipes list
+  Future<AiRecipeSaveResponse> saveAiRecipe(AiRecipeCandidate recipe) async {
+    try {
+      _logger.d('Saving AI recipe');
+
+      final response = await _apiService.post(
+        '/api/ai/save-recipe',
+        data: {
+          'recipe': recipe.toSavePayload(),
         },
       );
 
-      _logger.d('Recipe generated successfully');
-      return Recipe.fromJson(response);
+      return AiRecipeSaveResponse.fromJson(response);
     } catch (e) {
-      _logger.e('Error generating recipe: $e');
+      _logger.e('Error saving AI recipe: $e');
+      rethrow;
+    }
+  }
+
+  // Delete recipe
+  Future<void> deleteRecipe(String id) async {
+    try {
+      _logger.d('Deleting recipe: $id');
+      try {
+        await _apiService.delete('/api/recipes/$id');
+      } catch (e) {
+        // Fallback to admin route if user is admin
+        await _apiService.delete('/api/admin/recipes/$id');
+      }
+      try {
+        await DatabaseService.instance.deleteRecipe(id);
+      } catch (_) {}
+    } catch (e) {
+      _logger.e('Error deleting recipe: $e');
       rethrow;
     }
   }
 
   // Search recipes
-  Future<List<Recipe>> searchRecipes(String query) async {
-    try {
-      _logger.d('Searching recipes: $query');
-
-      final response = await _apiService.get(
-        '/api/recipes',
-        queryParameters: {'search': query},
-      );
-
-      final recipes = (response['recipes'] as List)
-          .map((recipe) => Recipe.fromJson(recipe))
-          .toList();
-
-      _logger.d('Found ${recipes.length} recipes');
-      return recipes;
-    } catch (e) {
-      _logger.e('Error searching recipes: $e');
-      rethrow;
-    }
+  Future<List<Recipe>> searchRecipes(String query, {String? category}) async {
+    return getRecipes(query: query, category: category);
   }
 }

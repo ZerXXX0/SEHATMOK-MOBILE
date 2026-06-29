@@ -1,0 +1,695 @@
+<!-- Onboarding 3: AI Recipes -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SehatMok Onboarding - AI Chef</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary": "#006c49",
+                        "primary-fixed": "#85f8c4",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#00855d",
+                        "on-primary-container": "#f5fff7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "on-surface-variant": "#3d4a42",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#002114",
+                        "surface-container-highest": "#e1e3e4",
+                        "inverse-primary": "#68dba9",
+                        "on-tertiary-container": "#f5fff7",
+                        "tertiary": "#006949",
+                        "outline": "#6d7a72",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "on-surface": "#191c1d",
+                        "surface-container": "#edeeef",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "tertiary-container": "#00855d",
+                        "on-background": "#191c1d",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-tint": "#006c4a",
+                        "secondary-container": "#6cf8bb",
+                        "primary": "#006948",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary-fixed": "#002114",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#45dfa4",
+                        "on-primary-fixed-variant": "#005137",
+                        "primary-fixed-dim": "#68dba9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "outline-variant": "#bccac0",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-fixed": "#68fcbf",
+                        "surface": "#f8f9fa",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1rem",
+                        "lg": "2rem",
+                        "margin-desktop": "5rem",
+                        "sm": "1rem",
+                        "gutter": "1.5rem",
+                        "base": "4px",
+                        "xs": "0.5rem",
+                        "xl": "3rem",
+                        "md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f8f9fa;
+            color: #191c1d;
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .active-dot {
+            width: 24px;
+            background-color: #006948;
+            transition: all 0.3s ease;
+        }
+
+        .inactive-dot {
+            width: 8px;
+            background-color: #bccac0;
+            transition: all 0.3s ease;
+        }
+
+        .floating-container {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Tonal depth layers */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+    <!-- TopAppBar -->
+    <header
+        class="w-full top-0 flex justify-between items-center px-margin-mobile py-sm w-full bg-surface dark:bg-surface">
+        <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-primary dark:text-inverse-primary"
+                style="font-size: 24px;">spa</span>
+            <span
+                class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">SehatMok</span>
+        </div>
+        <button
+            class="font-label-md text-label-md text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+            Skip
+        </button>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="flex-1 flex flex-col items-center justify-center px-margin-mobile text-center gap-lg">
+        <!-- Illustration Container -->
+        <div class="relative w-full max-w-[400px] flex justify-center items-center floating-container">
+            <!-- Background Glow Effect -->
+            <div class="absolute w-[300px] h-[300px] bg-secondary-fixed-dim/20 rounded-full blur-[80px] -z-10"></div>
+            <img alt="AI Chef Balanced Vitality Bowl Illustration" class="w-full h-auto drop-shadow-2xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5gXabLseqH3tnGfA48_tJQmfBcuuHNP35MW2HA0xoRShp2wkaOtUemyuMteKpQtpgvbtY4tle5RNg6562u1jgpH66ujIFi9q8yA1RO8R32AczL_ztBsWIrWjIqty12T-dADUvyHAS7uUNhis-vLHVBE1M8h1OacgGFk_QHJKg-pAy8K67FQiuNFd3-2J2z7whhbYEml2MqyknmvFXT0rwB9ZGfmlWNskL27iSN2xy4MyXp6KV5utUkvDDDsn5OqwmpTMTvol3mPU" />
+        </div>
+        <!-- Copy Section -->
+        <div class="flex flex-col gap-sm max-w-md mx-auto">
+            <h1
+                class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">
+                AI Chef at Your Service
+            </h1>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Get personalized recipe recommendations based on what you already have in your kitchen.
+            </p>
+        </div>
+        <!-- Pagination Dots -->
+        <div class="flex gap-2 items-center justify-center mt-sm">
+            <div class="inactive-dot h-2 rounded-full"></div>
+            <div class="inactive-dot h-2 rounded-full"></div>
+            <div class="active-dot h-2 rounded-full"></div>
+        </div>
+    </main>
+    <!-- Bottom Navigation Shell (Onboarding Actions) -->
+    <!-- Determined active: "Next" based on prompt flow, but since it's the final screen, it's "Get Started" -->
+    <footer
+        class="fixed bottom-0 left-0 w-full z-50 flex flex-col gap-xs px-margin-mobile pb-xl bg-surface dark:bg-surface">
+        <!-- Primary Action -->
+        <button
+            class="flex flex-col items-center justify-center bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-xl h-14 w-full mb-xs hover:brightness-95 dark:hover:brightness-110 active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/10">
+            <span class="font-label-md text-label-md text-lg">Get Started</span>
+        </button>
+        <!-- Secondary Action -->
+        <button
+            class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary font-bold h-12 w-full hover:bg-primary/5 rounded-xl transition-all duration-200">
+            <span class="font-label-md text-label-md">Already have an account? Log In</span>
+        </button>
+    </footer>
+    <!-- Script for subtle interaction -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Visual feedback on click for buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('touchstart', () => {
+                    btn.classList.add('scale-95');
+                });
+                btn.addEventListener('touchend', () => {
+                    btn.classList.remove('scale-95');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- Onboarding 2: Fridge Management -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SehatMok - Smart Fridge Manager</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary": "#006c49",
+                        "primary-fixed": "#85f8c4",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#00855d",
+                        "on-primary-container": "#f5fff7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "on-surface-variant": "#3d4a42",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#002114",
+                        "surface-container-highest": "#e1e3e4",
+                        "inverse-primary": "#68dba9",
+                        "on-tertiary-container": "#f5fff7",
+                        "tertiary": "#006949",
+                        "outline": "#6d7a72",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "on-surface": "#191c1d",
+                        "surface-container": "#edeeef",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "tertiary-container": "#00855d",
+                        "on-background": "#191c1d",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-tint": "#006c4a",
+                        "secondary-container": "#6cf8bb",
+                        "primary": "#006948",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary-fixed": "#002114",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#45dfa4",
+                        "on-primary-fixed-variant": "#005137",
+                        "primary-fixed-dim": "#68dba9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "outline-variant": "#bccac0",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-fixed": "#68fcbf",
+                        "surface": "#f8f9fa",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1rem",
+                        "lg": "2rem",
+                        "margin-desktop": "5rem",
+                        "sm": "1rem",
+                        "gutter": "1.5rem",
+                        "base": "4px",
+                        "xs": "0.5rem",
+                        "xl": "3rem",
+                        "md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .onboarding-gradient {
+            background: radial-gradient(circle at 50% -20%, #85f8c422 0%, #f8f9fa 60%);
+        }
+
+        .pagination-dot {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .active-dot {
+            width: 24px;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center onboarding-gradient">
+    <!-- TopAppBar Component (from JSON Mapping) -->
+    <header
+        class="w-full top-0 bg-surface dark:bg-surface flex justify-between items-center px-margin-mobile py-sm w-full z-40">
+        <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="spa">spa</span>
+            <h1
+                class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">
+                SehatMok</h1>
+        </div>
+        <button
+            class="font-label-md text-label-md text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+            Skip
+        </button>
+    </header>
+    <!-- Content Canvas -->
+    <main class="flex-grow flex flex-col items-center justify-center w-full max-w-lg px-margin-mobile pb-xl">
+        <!-- Central Illustration / Image Container -->
+        <div class="relative w-full aspect-square mb-lg flex items-center justify-center">
+            <!-- Soft background glow effect -->
+            <div class="absolute inset-0 bg-primary-fixed/20 blur-[80px] rounded-full scale-75"></div>
+            <!-- Provided Image Asset -->
+            <div class="relative z-10 w-full transform hover:scale-[1.02] transition-transform duration-500 ease-out">
+                <img alt="Smart Fridge Management interface showing freshness levels of spinach and avocado"
+                    class="w-full h-auto drop-shadow-2xl"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBpXKcO3KSM2sXJR3e-519z81ojnQ-yiLvFtVYY40dUoSsAGVD9NlkMveoNfs6dljvpfvc4VJhP8ZABgAZtLSYlXZJMVCfA7vN_hYs9TyDDQB4OeW_EWoVGG1C2ilIXzBopRUMCUFz_4l3cMl5RAzfJPQZ7OsYYJHeAj4aEOpViT1boEzPXsje6qQnBRgDesqjLKX_CnmsYa_xCv1wdDGvFAch2Kpdpn_EO8HE6-qb6PpNRvw9cht3cpfKBWEuWlVmwyXlkyoBaE8" />
+            </div>
+        </div>
+        <!-- Textual Information -->
+        <div class="text-center space-y-md animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2
+                class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">
+                Smart Fridge Manager
+            </h2>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-[320px] mx-auto">
+                Reduce food waste by keeping a digital inventory of your ingredients and tracking their freshness.
+            </p>
+        </div>
+        <!-- Pagination Indicator -->
+        <div class="flex gap-2 mt-xl mb-md">
+            <div class="pagination-dot h-2 w-2 rounded-full bg-outline-variant"></div>
+            <div class="pagination-dot active-dot h-2 rounded-full bg-primary"></div>
+            <div class="pagination-dot h-2 w-2 rounded-full bg-outline-variant"></div>
+        </div>
+    </main>
+    <!-- BottomNavBar Component (Transformed for Onboarding Flow) -->
+    <footer
+        class="fixed bottom-0 left-0 w-full z-50 flex flex-col gap-xs px-margin-mobile pb-xl bg-surface dark:bg-surface">
+        <!-- Primary Action (Mapped from Next) -->
+        <button
+            class="flex flex-col items-center justify-center bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-xl h-[56px] w-full mb-xs hover:brightness-95 active:scale-[0.98] transition-all duration-200 group">
+            <div class="flex items-center gap-xs">
+                <span class="font-label-md text-label-md">Next</span>
+                <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+            </div>
+        </button>
+        <!-- Secondary Action (Mapped from Log In) -->
+        <button
+            class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary font-bold h-12 w-full hover:brightness-95 active:scale-[0.98] transition-all duration-200">
+            <span class="font-label-md text-label-md">Already have an account? Log In</span>
+        </button>
+    </footer>
+    <script>
+        // Subtle parallax or interaction effects could go here
+        document.addEventListener('mousemove', (e) => {
+            const img = document.querySelector('img');
+            if (img) {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 45;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 45;
+                img.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+
+        // Reset transform on mouse leave
+        document.addEventListener('mouseleave', () => {
+            const img = document.querySelector('img');
+            if (img) {
+                img.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- Onboarding 1: Nutrition Tracking -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SehatMok Onboarding - Track Your Vitality</title>
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary": "#006c49",
+                        "primary-fixed": "#85f8c4",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#00855d",
+                        "on-primary-container": "#f5fff7",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "on-surface-variant": "#3d4a42",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#002114",
+                        "surface-container-highest": "#e1e3e4",
+                        "inverse-primary": "#68dba9",
+                        "on-tertiary-container": "#f5fff7",
+                        "tertiary": "#006949",
+                        "outline": "#6d7a72",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "on-surface": "#191c1d",
+                        "surface-container": "#edeeef",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005137",
+                        "tertiary-container": "#00855d",
+                        "on-background": "#191c1d",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-tint": "#006c4a",
+                        "secondary-container": "#6cf8bb",
+                        "primary": "#006948",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary-fixed": "#002114",
+                        "surface-container-high": "#e7e8e9",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#45dfa4",
+                        "on-primary-fixed-variant": "#005137",
+                        "primary-fixed-dim": "#68dba9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "outline-variant": "#bccac0",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-fixed": "#68fcbf",
+                        "surface": "#f8f9fa",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "1rem",
+                        "lg": "2rem",
+                        "margin-desktop": "5rem",
+                        "sm": "1rem",
+                        "gutter": "1.5rem",
+                        "base": "4px",
+                        "xs": "0.5rem",
+                        "xl": "3rem",
+                        "md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .pagination-dot {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .floating-anim {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <!-- TopAppBar -->
+    <header
+        class="w-full top-0 bg-surface dark:bg-surface flex justify-between items-center px-margin-mobile py-sm w-full z-50 fixed md:relative">
+        <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="spa">spa</span>
+            <span
+                class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">SehatMok</span>
+        </div>
+        <button
+            class="font-label-md text-label-md text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+            Skip
+        </button>
+    </header>
+    <main
+        class="min-h-screen flex flex-col items-center justify-center pt-xl pb-[180px] px-margin-mobile max-w-lg mx-auto text-center">
+        <!-- Central Illustration Container -->
+        <div class="relative w-full aspect-square flex items-center justify-center mb-lg floating-anim">
+            <div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+            <img alt="Vibrant health illustration showing a salad bowl with glowing biometric rings tracking nutrition metrics"
+                class="w-full h-auto object-contain max-w-[400px]"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBllXBpQrqkmNnJj34J7lNBU_zsP2S_--YwhUcyOQ4JUSC6Zt0lL1sXPS2WUwfvILMZzAPo-SRk2aKSy-WDCLYbmT_pvCqwIyrtTVZtw9AL4gMrII68zVmg19jOtfajJ_lMvEuBbo1H6u0wgbb1ZfTNtNLPS0nlbfLNyDWtcNtVl9F8cy6-9dhOsK0hO07Ez8eBO3_homMmlJMHyahmowYWCQAmeyBWYDTNZjehDZOubQA3MxCGSxSpOoDkEQ-detaoW--6EzzSjT4" />
+        </div>
+        <!-- Content Section -->
+        <div class="flex flex-col gap-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h1
+                class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">
+                Track Your Vitality
+            </h1>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Log your meals effortlessly and monitor your nutrition with smart, real-time progress trackers.
+            </p>
+        </div>
+        <!-- Pagination Dots -->
+        <div class="flex gap-xs mt-lg mb-xl">
+            <div class="pagination-dot h-2 w-6 bg-primary rounded-full"></div>
+            <div class="pagination-dot h-2 w-2 bg-outline-variant rounded-full"></div>
+            <div class="pagination-dot h-2 w-2 bg-outline-variant rounded-full"></div>
+        </div>
+    </main>
+    <!-- Bottom Navigation Actions -->
+    <footer
+        class="fixed bottom-0 left-0 w-full z-50 flex flex-col gap-xs px-margin-mobile pb-xl bg-surface/80 backdrop-blur-md">
+        <!-- Primary Action -->
+        <button
+            class="flex flex-col items-center justify-center bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-xl h-14 w-full mb-xs hover:brightness-95 active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/20">
+            <div class="flex items-center gap-xs">
+                <span class="font-label-md text-label-md">Next</span>
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+            </div>
+        </button>
+        <!-- Secondary Action -->
+        <button
+            class="flex items-center justify-center text-primary dark:text-inverse-primary font-bold h-12 w-full hover:bg-primary/5 rounded-xl transition-colors active:scale-[0.98]">
+            <div class="flex items-center gap-xs">
+                <span class="material-symbols-outlined text-[20px]" data-icon="login">login</span>
+                <span class="font-label-md text-label-md">Already have an account? Log In</span>
+            </div>
+        </button>
+    </footer>
+    <!-- Interactive script for slight parallax/scroll effect -->
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) / 40;
+            const moveY = (e.clientY - window.innerHeight / 2) / 40;
+            const illustration = document.querySelector('.floating-anim img');
+            if (illustration) {
+                illustration.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+
+        // Haptic-like feedback simulation for buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

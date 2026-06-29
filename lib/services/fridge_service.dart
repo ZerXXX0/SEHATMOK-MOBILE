@@ -1,7 +1,6 @@
 import 'package:logger/logger.dart';
 import '../models/fridge_item_model.dart';
 import 'api_service.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'database_service.dart';
 
 class FridgeService {
@@ -10,20 +9,27 @@ class FridgeService {
 
   FridgeService(this._apiService);
 
-  // Get all fridge items
-  Future<List<FridgeItem>> getFridgeItems() async {
+  // Get fridge items (optionally near expiry)
+  Future<List<FridgeItem>> getFridgeItems({bool nearExpiry = false}) async {
     try {
       _logger.d('Fetching fridge items');
 
-      final response = await _apiService.get('/api/fridge');
-      final items = (response as List)
+      final itemsResponse = nearExpiry
+          ? await _apiService.get(
+              '/api/fridge',
+              queryParameters: {'status': 'near-expiry'},
+            )
+          : await _apiService.get('/api/fridge');
+      final items = (itemsResponse as List)
           .map((item) => FridgeItem.fromJson(item))
           .toList();
 
       _logger.d('Fetched ${items.length} fridge items');
-      try {
-        await DatabaseService.instance.upsertFridgeItems(items);
-      } catch (_) {}
+      if (!nearExpiry) {
+        try {
+          await DatabaseService.instance.upsertFridgeItems(items);
+        } catch (_) {}
+      }
       return items;
     } catch (e) {
       _logger.e('Error fetching fridge items: $e');
@@ -54,7 +60,7 @@ class FridgeService {
           'category': category,
           'quantity': quantity,
           'unit': unit,
-          if (expiryDate != null) 'expiryDate': expiryDate.toIso8601String(),
+          if (expiryDate != null) 'expiryDate': expiryDate.toUtc().toIso8601String(),
         },
       );
 
@@ -77,6 +83,7 @@ class FridgeService {
     required double quantity,
     required String unit,
     DateTime? expiryDate,
+    bool clearExpiryDate = false,
   }) async {
     try {
       _logger.d('Updating fridge item: $id');
@@ -88,7 +95,8 @@ class FridgeService {
           'category': category,
           'quantity': quantity,
           'unit': unit,
-          if (expiryDate != null) 'expiryDate': expiryDate.toIso8601String(),
+          if (expiryDate != null || clearExpiryDate)
+            'expiryDate': expiryDate?.toUtc().toIso8601String(),
         },
       );
 
@@ -119,14 +127,32 @@ class FridgeService {
     }
   }
 
-  // Get items expiring soon
+  // Get items expiring soon (server-calculated)
   Future<List<FridgeItem>> getExpiringItems() async {
     try {
-      final items = await getFridgeItems();
-      return items.where((item) => item.isExpiringSoon || item.isExpired).toList();
+      return await getFridgeItems(nearExpiry: true);
     } catch (e) {
       _logger.e('Error getting expiring items: $e');
       return [];
+    }
+  }
+
+  // Delete all expired items
+  Future<int> deleteExpiredItems() async {
+    try {
+      final response = await _apiService.delete(
+        '/api/fridge/expired',
+        fromJson: (data) => data,
+      );
+
+      if (response is Map<String, dynamic> && response['deletedCount'] is int) {
+        return response['deletedCount'] as int;
+      }
+
+      return 0;
+    } catch (e) {
+      _logger.e('Error deleting expired items: $e');
+      rethrow;
     }
   }
 

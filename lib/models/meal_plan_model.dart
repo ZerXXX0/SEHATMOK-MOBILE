@@ -1,51 +1,57 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'recipe_model.dart';
 
-part 'meal_plan_model.g.dart';
+class MealPlanDay {
+  final String date;
+  final List<MealPlanItem> items;
 
-@JsonSerializable()
-class MealPlan {
-  final String id;
-  final String userId;
-  final DateTime date;
-  final MealSlot? breakfast;
-  final MealSlot? lunch;
-  final MealSlot? dinner;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-
-  MealPlan({
-    required this.id,
-    required this.userId,
+  const MealPlanDay({
     required this.date,
-    this.breakfast,
-    this.lunch,
-    this.dinner,
-    required this.createdAt,
-    this.updatedAt,
+    required this.items,
   });
 
-  factory MealPlan.fromJson(Map<String, dynamic> json) =>
-      _$MealPlanFromJson(json);
-  Map<String, dynamic> toJson() => _$MealPlanToJson(this);
+  factory MealPlanDay.fromJson(Map<String, dynamic> json) {
+    return MealPlanDay(
+      date: json['date'] as String,
+      items: (json['items'] as List? ?? [])
+          .map((item) => MealPlanItem.fromJson(item))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date,
+      'items': items.map((item) => item.toJson()).toList(),
+    };
+  }
 }
 
-@JsonSerializable()
-class MealSlot {
-  final String recipeId;
-  final String recipeName;
-  final String? recipeImageUrl;
-  final int? calories;
-  final DateTime createdAt;
+class MealPlanItem {
+  final String id;
+  final String slot;
+  final Recipe? recipe;
 
-  MealSlot({
-    required this.recipeId,
-    required this.recipeName,
-    this.recipeImageUrl,
-    this.calories,
-    required this.createdAt,
+  const MealPlanItem({
+    required this.id,
+    required this.slot,
+    required this.recipe,
   });
 
-  factory MealSlot.fromJson(Map<String, dynamic> json) =>
-      _$MealSlotFromJson(json);
-  Map<String, dynamic> toJson() => _$MealSlotToJson(this);
+  factory MealPlanItem.fromJson(Map<String, dynamic> json) {
+    return MealPlanItem(
+      id: json['id'] as String,
+      slot: json['slot'] as String,
+      recipe: json['recipe'] == null
+          ? null
+          : Recipe.fromJson(json['recipe'] as Map<String, dynamic>),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'slot': slot,
+      'recipe': recipe?.toJson(),
+    };
+  }
 }

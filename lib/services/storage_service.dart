@@ -22,6 +22,9 @@ class StorageService {
   static const String _refreshTokenKey = 'refresh_token';
   static const String _userIdKey = 'user_id';
   static const String _emailKey = 'user_email';
+  static const String _biometricEmailKey = 'biometric_email';
+  static const String _biometricPasswordKey = 'biometric_password';
+  static const String _biometricEnabledKey = 'is_biometric_enabled';
 
   Future<void> initialize() async {
     _prefs = await SharedPreferences.getInstance();
@@ -90,6 +93,32 @@ class StorageService {
     await _prefs.remove(key);
   }
 
+  // Biometric login details
+  Future<void> saveBiometricCredentials(String email, String password) async {
+    await _secureStorage.write(key: _biometricEmailKey, value: email);
+    await _secureStorage.write(key: _biometricPasswordKey, value: password);
+    await _prefs.setBool(_biometricEnabledKey, true);
+  }
+
+  Future<void> clearBiometricCredentials() async {
+    await _secureStorage.delete(key: _biometricEmailKey);
+    await _secureStorage.delete(key: _biometricPasswordKey);
+    await _prefs.setBool(_biometricEnabledKey, false);
+  }
+
+  Future<Map<String, String>?> getBiometricCredentials() async {
+    final email = await _secureStorage.read(key: _biometricEmailKey);
+    final password = await _secureStorage.read(key: _biometricPasswordKey);
+    if (email != null && password != null) {
+      return {'email': email, 'password': password};
+    }
+    return null;
+  }
+
+  bool isBiometricEnabled() {
+    return _prefs.getBool(_biometricEnabledKey) ?? true;
+  }
+
   // Clear All
   Future<void> clearAll() async {
     await _secureStorage.deleteAll();
@@ -99,7 +128,7 @@ class StorageService {
 
   // Logout
   Future<void> logout() async {
-    await _secureStorage.deleteAll();
+    await removeToken();
     await _prefs.remove(_userIdKey);
     await _prefs.remove(_emailKey);
     _logger.d('User logged out');
